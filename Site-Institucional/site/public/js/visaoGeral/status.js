@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var statusData = {
         labels: ['Desligado', 'Critico', 'Alerta', 'Ok'],
         datasets: [{
-            data: [20, 10, 20, 50],
+            data: [20, 2, 8, 70],
             backgroundColor: ['rgb(101, 101, 101)','rgba(255, 99, 71, 0.7)', 'rgba(255, 215, 0, 0.7)' ,'rgb(44, 161, 100)'],
             borderColor: [borderColorOff, borderColorCritico, borderColorAlerta, borderColorOk], 
             borderWidth: 2, 

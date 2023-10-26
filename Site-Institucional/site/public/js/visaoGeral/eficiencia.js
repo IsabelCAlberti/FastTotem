@@ -7,17 +7,17 @@ document.addEventListener('DOMContentLoaded', function() {
 var efficiencyCanvas = document.getElementById('efficiency-canvas').getContext('2d');
 
 var efficiencyData = {
-    labels: ['Totem 1', 'Totem 2', 'Totem 3', 'Totem 4', 'Totem 5', 'Totem 6', 'Totem 7', 'Totem 8', 'Totem 9', 'Totem 10'],
+    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'],
     datasets: [
         {
-            data: [8, 6.5, 9, 7.5, 2, 4, 5, 9, 1, 3.5],
+            data: [18, 13, 9, 7.5, 3, 10, 5, 10, 2, 9.5],
             backgroundColor: 'rgb(44, 161, 100)',
             borderColor: borderColorOk,
             borderWidth: 2,
             label: 'Uptime',
         },
         {
-            data: [2, 3.5, 1, 2.5, 8, 6, 5, 1, 9, 6.5],
+            data: [4, 11, 15, 16.5, 21, 14, 19, 14, 15, 14.5],
             backgroundColor: 'rgba(255, 99, 71, 0.7)',
             borderColor: borderColorCritico,
             borderWidth: 2,
@@ -51,7 +51,7 @@ var efficiencyChart = new Chart(efficiencyCanvas, {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    stepSize: 10,
+                    stepSize: 5,
                     color: 'white',
                     font: {
                         family: 'Montserrat',
