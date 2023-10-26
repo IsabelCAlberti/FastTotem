@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Verifica se o Java está instalado
+if ! command -v java &> /dev/null; then
+    echo "Java não encontrado, instalando..."
+    sudo add-apt-repository ppa:linuxuprising/java
+    sudo apt update
+    sudo apt install openjdk-17-jdk -y
+    echo "Java instalado com sucesso."
+fi
+
+# Caminho para o diretório onde o projeto será clonado
+projectPath="$HOME/Desktop/Cliente-Java"
+
+# Verifica se o diretório do projeto já existe
+if [ -d "$projectPath" ]; then
+    echo "Projeto já clonado."
+else
+    echo "Clonando o projeto do GitHub..."
+    git clone https://github.com/FastTotem/Cliente-Java.git "$projectPath"
+fi
+
+# Caminho para o arquivo JAR no projeto clonado
+jarPath="$projectPath/out/artifacts/validacao_login_senha_jar"
+
+# Verifica se o arquivo JAR existe no projeto
+if [ -f "$jarPath/validacao-login-senha.jar" ]; then
+    echo "Iniciando o arquivo JAR do projeto..."
+
+    # Inicie o contêiner MySQL se necessário
+    # Você precisa ajustar essas configurações para corresponder ao seu contêiner MySQL
+    docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=fasttotem123 -p 3306:3306 mysql:latest
+
+    # Aguarde alguns segundos para o MySQL iniciar (pode ajustar o tempo conforme necessário)
+    sleep 10
+
+    # Execute o script SQL no contêiner MySQL para criar as tabelas
+    docker exec -i mysql-container mysql -u root -pfasttotem123 -e "CREATE DATABASE IF NOT EXISTS fasttotem;"
+    docker exec -i mysql-container mysql -u root -pfasttotem123 fasttotem < "$projectPath/bd/script.sql"
+
+    # Crie o usuário fastTotemAdmin e conceda todos os privilégios
+    docker exec -i mysql-container mysql -u root -pfasttotem123 -e "CREATE USER 'fastTotemAdmin'@'localhost' IDENTIFIED BY 'fasttotem123';"
+    docker exec -i mysql-container mysql -u root -pfasttotem123 -e "GRANT ALL PRIVILEGES ON fasttotem.* TO 'fastTotemAdmin'@'localhost';"
+
+    # Atualize as permissões
+    docker exec -i mysql-container mysql -u root -pfasttotem123 -e "FLUSH PRIVILEGES;"
+
+    java -jar "$jarPath/validacao-login-senha.jar"
+    echo "Arquivo JAR do projeto iniciado com sucesso."
+else
+    echo "Arquivo JAR do projeto não encontrado."
+fi
